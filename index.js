@@ -27,7 +27,6 @@ db.query(`SHOW DATABASES LIKE '${student_unique_database_name}'`)
     else {
         useTheDatabase()
         .then(() => playInquirer())
-        //.then(() => db.close())
         .catch(e => console.error(e))
     }
 }).catch(e => console.error(e))
@@ -72,20 +71,4 @@ function createTheDatabase() {
 
 function playInquirer() {
     return employeeEntry.whatWouldYouLikeToDo(db)
-    //return Promise.resolve(100)
 }
-
-/*
-
-USE andrewo_employee_assignment_db;
-
-SET foreign_key_checks = 0;
-DELETE FROM employee WHERE id=1;
-DELETE FROM role WHERE id=1;
-DELETE FROM department WHERE id=1;
-
-INSERT INTO department (id, name) VALUES (1, "OWNERSHIP");
-INSERT INTO role (id, title, salary, department_id) VALUES (1, "CEO", 0, 1);
-INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (1, "Lord", "Farquaad", 1, 1);
-
-*/
