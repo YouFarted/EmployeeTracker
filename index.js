@@ -10,6 +10,7 @@ const student_unique_database_name = "andrewo_employee_assignment_db"
 const title = figlet.textSync('Employee Manager', { horizontalLayout: 'full' })
 console.log(title)
 
+
 let db = new Database({
     host: "localhost",
     user: "root",
