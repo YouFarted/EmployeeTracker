@@ -22,15 +22,12 @@ async function main() {
     let results = await db.query(`SHOW DATABASES LIKE '${student_unique_database_name}'`)
 
     if(results.length === 0) {
-        createTheDatabase()
-        .then(() => playInquirer())
-        .then(() => db.close())
-        .catch(e => console.error(e))
+        await createTheDatabase()
+        await playInquirer()
     }
     else {
-        useTheDatabase()
-        .then(() => playInquirer())
-        .catch(e => console.error(e))
+        await useTheDatabase()
+        await playInquirer()
     }
 }
 
@@ -72,8 +69,8 @@ async function createTheDatabase() {
     await db.query(`INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (1, "Lord", "Farquaad", 1, 1)`)
 }
 
-function playInquirer() {
-    employeeEntry.whatWouldYouLikeToDo(db)
+async function playInquirer() {
+    await employeeEntry.whatWouldYouLikeToDo(db)
 }
 
 main().catch(e =>console.error(e))
