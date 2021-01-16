@@ -18,8 +18,9 @@ let db = new Database({
     database: "sys"
 })
 
-db.query(`SHOW DATABASES LIKE '${student_unique_database_name}'`)
-.then(function (results) {
+async function main() {
+    let results = await db.query(`SHOW DATABASES LIKE '${student_unique_database_name}'`)
+
     if(results.length === 0) {
         createTheDatabase()
         .then(() => playInquirer())
@@ -31,20 +32,20 @@ db.query(`SHOW DATABASES LIKE '${student_unique_database_name}'`)
         .then(() => playInquirer())
         .catch(e => console.error(e))
     }
-}).catch(e => console.error(e))
+}
 
 function useTheDatabase() {
     return db.query(`USE ${student_unique_database_name}`)
 }
 
-function createTheDatabase() {
-    return db.query(`CREATE DATABASE ${student_unique_database_name}`)
-    .then(() => db.query(`USE ${student_unique_database_name}`))
-    .then(() => db.query(`CREATE TABLE department ( 
+async function createTheDatabase() {
+    await db.query(`CREATE DATABASE ${student_unique_database_name}`)
+    await db.query(`USE ${student_unique_database_name}`)
+    await db.query(`CREATE TABLE department ( 
             id INT NOT NULL AUTO_INCREMENT,
             name VARCHAR(30) NOT NULL,
-            PRIMARY KEY (id) )`))
-    .then(() => db.query(`CREATE TABLE role ( 
+            PRIMARY KEY (id) )`)
+    await db.query(`CREATE TABLE role ( 
             id INT NOT NULL AUTO_INCREMENT,
             title VARCHAR(30) NOT NULL,
             salary DECIMAL NOT NULL,
@@ -52,8 +53,8 @@ function createTheDatabase() {
             CONSTRAINT fk_department
             FOREIGN KEY (department_id)
             REFERENCES department(id),
-            PRIMARY KEY (id) )`))
-    .then(() => db.query(`CREATE TABLE employee ( 
+            PRIMARY KEY (id) )`)
+    await db.query(`CREATE TABLE employee ( 
         id INT NOT NULL AUTO_INCREMENT,
         first_name VARCHAR(30) NOT NULL,
         last_name VARCHAR(30) NOT NULL,
@@ -65,12 +66,14 @@ function createTheDatabase() {
         CONSTRAINT fk_manager  -- There will be ONE root manager, the CEO.
         FOREIGN KEY (manager_id)
         REFERENCES employee(id),
-        PRIMARY KEY (id) )`))
-    .then(() => db.query(`INSERT INTO department (id, name) VALUES (1, "OWNERSHIP")`))
-    .then(() => db.query(`INSERT INTO role (id, title, salary, department_id) VALUES (1, "CEO", 0, 1)`))
-    .then(() => db.query(`INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (1, "Lord", "Farquaad", 1, 1)`))
+        PRIMARY KEY (id) )`)
+    await db.query(`INSERT INTO department (id, name) VALUES (1, "OWNERSHIP")`)
+    await db.query(`INSERT INTO role (id, title, salary, department_id) VALUES (1, "CEO", 0, 1)`)
+    await db.query(`INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (1, "Lord", "Farquaad", 1, 1)`)
 }
 
 function playInquirer() {
-    return employeeEntry.whatWouldYouLikeToDo(db)
+    employeeEntry.whatWouldYouLikeToDo(db)
 }
+
+main().catch(e =>console.error(e))
