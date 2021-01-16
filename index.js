@@ -49,7 +49,8 @@ async function createTheDatabase() {
             department_id INT NOT NULL,
             CONSTRAINT fk_department
             FOREIGN KEY (department_id)
-            REFERENCES department(id),
+            REFERENCES department(id)
+            ON DELETE CASCADE,
             PRIMARY KEY (id) )`)
     await db.query(`CREATE TABLE employee ( 
         id INT NOT NULL AUTO_INCREMENT,
@@ -59,10 +60,12 @@ async function createTheDatabase() {
         manager_id INT NOT NULL,
         CONSTRAINT fk_role
         FOREIGN KEY (role_id)
-        REFERENCES role(id),
+        REFERENCES role(id)
+        ON DELETE CASCADE,
         CONSTRAINT fk_manager  -- There will be ONE root manager, the CEO.
         FOREIGN KEY (manager_id)
-        REFERENCES employee(id),
+        REFERENCES employee(id)
+        ON DELETE CASCADE,
         PRIMARY KEY (id) )`)
     await db.query(`INSERT INTO department (id, name) VALUES (1, "OWNERSHIP")`)
     await db.query(`INSERT INTO role (id, title, salary, department_id) VALUES (1, "CEO", 0, 1)`)
